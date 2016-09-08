@@ -31,11 +31,20 @@ end
 
 # Exclude PostgreSQL updates coming from Amazon in the future or things could break in
 # horrifying and interesting ways.
-ruby_block "exclude Amazon-provided PostgreSQL updates" do
+ruby_block "exclude Amazon-provided PostgreSQL updates from amzn-updates.repo" do
   block do
     fe = Chef::Util::FileEdit.new("/etc/yum.repos.d/amzn-updates.repo")
     fe.insert_line_after_match(/\[amzn-updates\]/, "exclude=postgresql*")
     fe.write_file
   end
   only_if { File.exist?("/etc/yum.repos.d/amzn-updates.repo") && !File.read("/etc/yum.repos.d/amzn-updates.repo").include?("exclude=postgresql*")  }
+end
+
+ruby_block "exclude Amazon-provided PostgreSQL updates from amzn-main.repo" do
+  block do
+    fe = Chef::Util::FileEdit.new("/etc/yum.repos.d/amzn-main.repo")
+    fe.insert_line_after_match(/\[amzn-main\]/, "exclude=postgresql*")
+    fe.write_file
+  end
+  only_if { File.exist?("/etc/yum.repos.d/amzn-main.repo") && !File.read("/etc/yum.repos.d/amzn-main.repo").include?("exclude=postgresql*")  }
 end
