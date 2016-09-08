@@ -7,9 +7,17 @@ case node["platform"]
 when "amazon"
   include_recipe "opsworks_postgres::pgdg_yum_repo"
 
-  package "postgresql93"
-  package "postgresql93-libs"
-  package "postgresql93-devel"
+  yum_package "postgresql93" do
+    flush_cache [:before, :after]
+  end
+
+  yum_package "postgresql93-libs" do
+    flush_cache [:before, :after]
+  end
+
+  yum_package "postgresql93-devel" do
+    flush_cache [:before, :after]
+  end
 
   # Next, link pg_config to /usr/local/bin to make Ruby able to compile the pg gem.
   # Pretty much _every other_ PG utility exists in /etc/alternatives and is symlinked
