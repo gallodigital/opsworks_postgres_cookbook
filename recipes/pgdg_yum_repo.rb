@@ -48,3 +48,7 @@ ruby_block "exclude Amazon-provided PostgreSQL updates from amzn-main.repo" do
   end
   only_if { File.exist?("/etc/yum.repos.d/amzn-main.repo") && !File.read("/etc/yum.repos.d/amzn-main.repo").include?("exclude=postgresql*")  }
 end
+
+execute 'update Yum cache after adding PGDG repo' do
+  command 'yum makecache'
+end
